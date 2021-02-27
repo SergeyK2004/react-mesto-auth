@@ -1,0 +1,14 @@
+.popup__new-card-container {
+  background-color: #ffffff;
+  color: #000000;
+  position: relative;
+  width: 430px;
+  border-radius: 10px;
+}
+
+@media screen and (max-width: 519px) {
+  .popup__new-card-container {
+    max-width: 240px;
+    margin: 0 40px;
+  }
+}

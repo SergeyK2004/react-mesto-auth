@@ -1,0 +1,10 @@
+.popup__button-close_type_new-card {
+}
+
+@media screen and (max-width: 519px) {
+  .popup__button-close_type_new-card {
+    right: -32px;
+    top: -32px;
+    width: 40px;
+  }
+}

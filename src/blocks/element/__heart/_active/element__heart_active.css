@@ -1,0 +1,4 @@
+.element__heart_active {
+  background: url(../../../../images/heart-black.svg) center no-repeat;
+  background-size: 100%;
+}

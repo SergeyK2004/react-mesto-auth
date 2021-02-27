@@ -1,0 +1,5 @@
+.profile__name-line {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

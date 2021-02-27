@@ -1,0 +1,19 @@
+.profile__spec {
+  font-style: normal;
+  font-weight: normal;
+  font-size: 18px;
+  line-height: 22px;
+  margin-block-start: 0;
+  margin-block-end: 0;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+@media screen and (max-width: 619px) {
+  .profile__spec {
+    text-align: center;
+    font-size: 14px;
+    line-height: 17px;
+  }
+}
