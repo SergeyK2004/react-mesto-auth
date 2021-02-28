@@ -6,4 +6,6 @@
   margin: auto;
   color: #ffffff;
   padding: 0 19px;
+    min-height: 100vh;
+    justify-content: space-between;
 }

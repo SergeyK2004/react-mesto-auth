@@ -60,3 +60,10 @@
 @import url("./blocks/popup/__input-error/_visible/popup__input-error_visible.css");
 @import url("./blocks/popup/__confirm-container/popup__confirm-container.css");
 @import url("./blocks/popup/__avatar-container/popup__avatar-container.css");
+
+@import url("./blocks/authForm/authForm.css");
+@import url("./blocks/authForm/__title/authForm__title.css");
+@import url("./blocks/authForm/__form/authForm__form.css");
+@import url("./blocks/authForm/__field/authForm__field.css");
+@import url("./blocks/authForm/__input/authForm__input.css");
+@import url("./blocks/authForm/__button-submit/authForm__button-submit.css");

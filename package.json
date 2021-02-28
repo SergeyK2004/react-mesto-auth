@@ -1,7 +1,9 @@
 {
   "name": "mesto-react",
   "version": "0.2.0",
-  "author": {"name": "Sergey Krivoruchko"},
+  "author": {
+    "name": "Sergey Krivoruchko"
+  },
   "description": "Проектная работа по изучению React",
   "private": true,
   "dependencies": {
@@ -10,6 +12,7 @@
     "@testing-library/user-event": "^12.6.2",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
+    "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.1",
     "web-vitals": "^0.2.4"
   },
