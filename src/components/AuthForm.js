@@ -11,6 +11,8 @@ function AuthForm(props) {
     setPassword(evt.target.value);
   }
 
+  const underButtonText = props.needUnderButton ? props.children : "";
+
   return (
     <section className={`authForm`}>
       <h2 className={`authForm__title`}>{props.title}</h2>
@@ -57,6 +59,7 @@ function AuthForm(props) {
           {props.button}
         </button>
       </form>
+      {underButtonText}
     </section>
   );
 }

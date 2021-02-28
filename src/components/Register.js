@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import AuthForm from "./AuthForm";
 
 function Register(props) {
@@ -8,7 +9,16 @@ function Register(props) {
       button="Зарегистрироваться"
       needUnderButton={true}
       onSubmit={props.onSubmit}
-    ></AuthForm>
+    >
+      <div className="authForm__signin">
+        <p>
+          Уже зарегистрированы?
+          <Link to="sign-in" className="authForm__signin-link">
+            Войти
+          </Link>
+        </p>
+      </div>
+    </AuthForm>
   );
 }
 

@@ -117,7 +117,7 @@ function App() {
                 <Header />
                 <Login />
               </Route>
-              <Route path="/mesto">
+              <ProtectedRoute path="/mesto" loggedIn={loggedIn}>
                 <Header />
                 <Main
                   onEditProfile={handleEditProfileClick}
@@ -128,7 +128,7 @@ function App() {
                   onCardDelete={onCardDelete}
                   cards={cards}
                 />
-              </Route>
+              </ProtectedRoute>
               <Route exact path="/">
                 {loggedIn ? (
                   <Redirect to="/mesto" />

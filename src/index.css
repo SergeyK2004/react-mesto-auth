@@ -67,3 +67,5 @@
 @import url("./blocks/authForm/__field/authForm__field.css");
 @import url("./blocks/authForm/__input/authForm__input.css");
 @import url("./blocks/authForm/__button-submit/authForm__button-submit.css");
+@import url("./blocks/authForm/__signin/authForm__signin.css");
+@import url("./blocks/authForm/__signin-link/authForm__signin-link.css");
