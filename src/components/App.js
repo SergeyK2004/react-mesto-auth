@@ -8,10 +8,11 @@ import { CurrentUserContext } from "../contexts/CurrentUserContext";
 import EditProfilePopup from "./EditProfilePopup";
 import EditAvatarPopup from "./EditAvatarPopup";
 import AddPlacePopup from "./AddPlacePopup";
-import { Route, Switch, Redirect } from "react-router-dom";
+import { Route, Switch, Redirect, useHistory } from "react-router-dom";
 import Login from "./Login";
 import Register from "./Register";
 import ProtectedRoute from "./ProtectedRoute";
+import { chekToken } from "./Auth";
 
 function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = React.useState(
@@ -26,10 +27,14 @@ function App() {
   const [currentUser, setCurrentUser] = React.useState({});
   const [cards, setCards] = React.useState([]);
   const [loggedIn, setLoggedIn] = React.useState(false);
+  const [userEmail, setUserEmail] = React.useState(false);
+
+  const history = useHistory();
 
   function handleAddPlaceClick() {
     setIsAddPlacePopupOpen(true);
   }
+
   function handleEditProfileClick() {
     setIsEditProfilePopupOpen(true);
   }
@@ -80,6 +85,10 @@ function App() {
       setCards(newCards);
     });
   }
+  function handleSignin(email) {
+    setLoggedIn(true);
+    setUserEmail(email);
+  }
 
   React.useEffect(() => {
     api
@@ -103,6 +112,20 @@ function App() {
       });
   }, []);
 
+  React.useEffect(() => {
+    if (localStorage.getItem("token")) {
+      const token = localStorage.getItem("token");
+      // здесь будем проверять токен
+      chekToken(token).then((res) => {
+        if (res) {
+          setLoggedIn(true);
+          setUserEmail(res.data.email);
+          history.push("/mesto");
+        }
+      });
+    }
+  }, [history]);
+
   return (
     <div className="App">
       <CurrentUserContext.Provider value={currentUser}>
@@ -110,15 +133,30 @@ function App() {
           <div className="page">
             <Switch>
               <Route path="/sign-up">
-                <Header />
+                <Header
+                  userName=""
+                  link="sign-in"
+                  linkText="Войти"
+                  linkColor="#ffffff"
+                />
                 <Register />
               </Route>
               <Route path="/sign-in">
-                <Header />
-                <Login />
+                <Header
+                  userName=""
+                  link="sign-up"
+                  linkText="Регистрация"
+                  linkColor="#ffffff"
+                />
+                <Login handleSignin={handleSignin} />
               </Route>
               <ProtectedRoute path="/mesto" loggedIn={loggedIn}>
-                <Header />
+                <Header
+                  userName={userEmail}
+                  link="signOut"
+                  linkText="Выйти"
+                  linkColor="#A9A9A9"
+                />
                 <Main
                   onEditProfile={handleEditProfileClick}
                   onAddPlace={handleAddPlaceClick}

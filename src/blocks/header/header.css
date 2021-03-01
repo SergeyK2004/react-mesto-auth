@@ -1,11 +1,19 @@
 .header {
   /* min-height: 74px; */
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   justify-content: space-between;
   margin-top: 45px;
   padding-bottom: 40px;
   border-bottom: 1px solid rgba(84, 84, 84, 0.7);
+  font-style: normal;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 22px;
+
+  text-align: right;
+
+  color: #FFFFFF
 }
 
 @media screen and (max-width: 619px) {
