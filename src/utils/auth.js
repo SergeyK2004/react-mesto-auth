@@ -11,20 +11,12 @@ export const register = (password, email) => {
       password: password,
       email: email,
     }),
-  })
-    .then((response) => {
-      try {
-        if (response.status === 201) {
-          return response.json();
-        }
-      } catch (e) {
-        return e;
-      }
-    })
-    .then((res) => {
-      return res;
-    })
-    .catch((err) => console.log(err));
+  }).then((response) => {
+    if (!response.ok) {
+      return Promise.reject(`Ошибка: ${response.status}`);
+    }
+    return response.json();
+  });
 };
 export const autorize = (password, email) => {
   return fetch(`${BASE_URL}/signin`, {
@@ -37,21 +29,14 @@ export const autorize = (password, email) => {
       password: password,
       email: email,
     }),
-  })
-    .then((response) => {
-      try {
-        if (response.status === 200) {
-          return response.json();
-        }
-      } catch (e) {
-        return e;
-      }
-    })
-    .then((res) => {
-      return res;
-    })
-    .catch((err) => console.log(err));
+  }).then((response) => {
+    if (!response.ok) {
+      return Promise.reject(`Ошибка: ${response.status}`);
+    }
+    return response.json();
+  });
 };
+
 export const chekToken = (token) => {
   return fetch(`${BASE_URL}/users/me`, {
     method: "GET",
@@ -60,18 +45,10 @@ export const chekToken = (token) => {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
-  })
-    .then((response) => {
-      try {
-        if (response.status === 200) {
-          return response.json();
-        }
-      } catch (e) {
-        return e;
-      }
-    })
-    .then((res) => {
-      return res;
-    })
-    .catch((err) => console.log(err));
+  }).then((response) => {
+    if (!response.ok) {
+      return Promise.reject(`Ошибка: ${response.status}`);
+    }
+    return response.json();
+  });
 };

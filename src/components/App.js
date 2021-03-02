@@ -12,7 +12,8 @@ import { Route, Switch, Redirect, useHistory } from "react-router-dom";
 import Login from "./Login";
 import Register from "./Register";
 import ProtectedRoute from "./ProtectedRoute";
-import { chekToken } from "./Auth";
+import InfoTooltip from "./InfoTooltip";
+import { chekToken, autorize, register } from "../utils/auth";
 
 function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = React.useState(
@@ -28,6 +29,9 @@ function App() {
   const [cards, setCards] = React.useState([]);
   const [loggedIn, setLoggedIn] = React.useState(false);
   const [userEmail, setUserEmail] = React.useState(false);
+  const [isClearInput, setIsClearInput] = React.useState(false);
+  const [isTooltipPopupOpen, setIsTooltipPopupOpen] = React.useState(false);
+  const [isRegSuccess, setIsRegSuccess] = React.useState(false);
 
   const history = useHistory();
 
@@ -51,43 +55,110 @@ function App() {
     setSelectedCard("");
   }
   function handleUpdateUser(item) {
-    api.setUserInfo(item).then((newUserInfo) => {
-      setCurrentUser(newUserInfo);
-    });
-    closeAllPopups();
+    api
+      .setUserInfo(item)
+      .then((newUserInfo) => {
+        setCurrentUser(newUserInfo);
+        closeAllPopups();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
   function handleUpdateAvatar(item) {
-    api.setUserAvatar(item).then((newUserInfo) => {
-      setCurrentUser(newUserInfo);
-    });
-    closeAllPopups();
+    api
+      .setUserAvatar(item)
+      .then((newUserInfo) => {
+        setCurrentUser(newUserInfo);
+        closeAllPopups();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
   function handleAddPlaceSubmit(item) {
-    api.setNewCard(item).then((newCard) => {
-      setCards([newCard, ...cards]);
-    });
-    closeAllPopups();
+    api
+      .setNewCard(item)
+      .then((newCard) => {
+        setCards([newCard, ...cards]);
+        closeAllPopups();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
   function onCardLike(card) {
     const isLiked = card.likes.some((i) => i._id === currentUser._id);
-    api.reverseLike(card._id, isLiked).then((newCard) => {
-      const newCards = cards.map((c) => (c._id === card._id ? newCard : c));
-      // Обновляем стейт
-      setCards(newCards);
-    });
+    api
+      .reverseLike(card._id, isLiked)
+      .then((newCard) => {
+        const newCards = cards.map((c) => (c._id === card._id ? newCard : c));
+        // Обновляем стейт
+        setCards(newCards);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
   function onCardDelete(card) {
-    api.delCard(card).then((newCard) => {
-      const newCards = cards.filter((c) => c._id !== card._id);
-      // Обновляем стейт
-      setCards(newCards);
-    });
+    api
+      .delCard(card)
+      .then((newCard) => {
+        const newCards = cards.filter((c) => c._id !== card._id);
+        // Обновляем стейт
+        setCards(newCards);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
+
   function handleSignin(email) {
     setLoggedIn(true);
     setUserEmail(email);
+  }
+  function onLogin(password, email) {
+    autorize(password, email)
+      .then((res) => {
+        setIsClearInput(true);
+        localStorage.setItem("token", res.token);
+        handleSignin(email);
+        history.push("/mesto");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+  function onRegister(password, email) {
+    register(password, email)
+      .then(() => {
+        setIsClearInput(true);
+        setIsRegSuccess(true);
+        setIsTooltipPopupOpen(true);
+      })
+      .catch((err) => {
+        console.log(err);
+        setIsRegSuccess(false);
+        setIsTooltipPopupOpen(true);
+      });
+  }
+  function closePopup() {
+    setIsTooltipPopupOpen(false);
+    if (isRegSuccess) {
+      history.push("/sign-in");
+    }
+  }
+
+  function onHeaderClick(link) {
+    if (link === "signOut") {
+      localStorage.removeItem("token");
+      history.push("/sign-in");
+    } else {
+      history.push(`/${link}`);
+    }
   }
 
   React.useEffect(() => {
@@ -116,13 +187,15 @@ function App() {
     if (localStorage.getItem("token")) {
       const token = localStorage.getItem("token");
       // здесь будем проверять токен
-      chekToken(token).then((res) => {
-        if (res) {
+      chekToken(token)
+        .then((res) => {
           setLoggedIn(true);
           setUserEmail(res.data.email);
           history.push("/mesto");
-        }
-      });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     }
   }, [history]);
 
@@ -138,8 +211,9 @@ function App() {
                   link="sign-in"
                   linkText="Войти"
                   linkColor="#ffffff"
+                  onHeaderClick={onHeaderClick}
                 />
-                <Register />
+                <Register onRegister={onRegister} isClearInput={isClearInput} />
               </Route>
               <Route path="/sign-in">
                 <Header
@@ -147,8 +221,13 @@ function App() {
                   link="sign-up"
                   linkText="Регистрация"
                   linkColor="#ffffff"
+                  onHeaderClick={onHeaderClick}
                 />
-                <Login handleSignin={handleSignin} />
+                <Login
+                  handleSignin={handleSignin}
+                  onLogin={onLogin}
+                  isClearInput={isClearInput}
+                />
               </Route>
               <ProtectedRoute path="/mesto" loggedIn={loggedIn}>
                 <Header
@@ -156,6 +235,7 @@ function App() {
                   link="signOut"
                   linkText="Выйти"
                   linkColor="#A9A9A9"
+                  onHeaderClick={onHeaderClick}
                 />
                 <Main
                   onEditProfile={handleEditProfileClick}
@@ -194,6 +274,11 @@ function App() {
               onUpdateAvatar={handleUpdateAvatar}
             />
             <ImagePopup card={selectedCard} onClose={closeAllPopups} />
+            <InfoTooltip
+              isOpen={isTooltipPopupOpen}
+              onClose={closePopup}
+              isRegSuccess={isRegSuccess}
+            />
           </div>
         </div>
       </CurrentUserContext.Provider>
